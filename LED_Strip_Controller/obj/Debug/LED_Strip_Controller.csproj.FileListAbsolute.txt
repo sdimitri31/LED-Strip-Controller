@@ -1,0 +1,10 @@
+d:\documents\visual studio 2012\Projects\LED_Strip_Controller\LED_Strip_Controller\bin\Debug\LED_Strip_Controller.exe.config
+d:\documents\visual studio 2012\Projects\LED_Strip_Controller\LED_Strip_Controller\bin\Debug\LED_Strip_Controller.exe
+d:\documents\visual studio 2012\Projects\LED_Strip_Controller\LED_Strip_Controller\bin\Debug\LED_Strip_Controller.pdb
+d:\documents\visual studio 2012\Projects\LED_Strip_Controller\LED_Strip_Controller\obj\Debug\LED_Strip_Controller.csprojResolveAssemblyReference.cache
+d:\documents\visual studio 2012\Projects\LED_Strip_Controller\LED_Strip_Controller\obj\Debug\LED_Strip_Controller.MainForm.resources
+d:\documents\visual studio 2012\Projects\LED_Strip_Controller\LED_Strip_Controller\obj\Debug\LED_Strip_Controller.Properties.Resources.resources
+d:\documents\visual studio 2012\Projects\LED_Strip_Controller\LED_Strip_Controller\obj\Debug\LED_Strip_Controller.csproj.GenerateResource.Cache
+d:\documents\visual studio 2012\Projects\LED_Strip_Controller\LED_Strip_Controller\obj\Debug\LED_Strip_Controller.exe
+d:\documents\visual studio 2012\Projects\LED_Strip_Controller\LED_Strip_Controller\obj\Debug\LED_Strip_Controller.pdb
+d:\documents\visual studio 2012\Projects\LED_Strip_Controller\LED_Strip_Controller\bin\Debug\NAudio.dll
