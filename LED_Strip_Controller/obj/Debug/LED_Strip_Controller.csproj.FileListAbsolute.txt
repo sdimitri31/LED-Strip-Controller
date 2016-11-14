@@ -8,3 +8,16 @@ d:\documents\visual studio 2012\Projects\LED_Strip_Controller\LED_Strip_Controll
 d:\documents\visual studio 2012\Projects\LED_Strip_Controller\LED_Strip_Controller\obj\Debug\LED_Strip_Controller.exe
 d:\documents\visual studio 2012\Projects\LED_Strip_Controller\LED_Strip_Controller\obj\Debug\LED_Strip_Controller.pdb
 d:\documents\visual studio 2012\Projects\LED_Strip_Controller\LED_Strip_Controller\bin\Debug\NAudio.dll
+D:\Documents\Visual Studio 2015\Projects\LED_Strip_Controller\LED_Strip_Controller\bin\Debug\LED_Strip_Controller.exe.config
+D:\Documents\Visual Studio 2015\Projects\LED_Strip_Controller\LED_Strip_Controller\obj\Debug\LED_Strip_Controller.exe
+D:\Documents\Visual Studio 2015\Projects\LED_Strip_Controller\LED_Strip_Controller\obj\Debug\LED_Strip_Controller.pdb
+D:\Documents\Visual Studio 2015\Projects\LED_Strip_Controller\LED_Strip_Controller\bin\Debug\LED_Strip_Controller.exe
+D:\Documents\Visual Studio 2015\Projects\LED_Strip_Controller\LED_Strip_Controller\bin\Debug\LED_Strip_Controller.pdb
+D:\Documents\Visual Studio 2015\Projects\LED_Strip_Controller\LED_Strip_Controller\obj\Debug\LED_Strip_Controller.csprojResolveAssemblyReference.cache
+D:\Documents\Visual Studio 2015\Projects\LED_Strip_Controller\LED_Strip_Controller\obj\Debug\LED_Strip_Controller.MainForm.resources
+D:\Documents\Visual Studio 2015\Projects\LED_Strip_Controller\LED_Strip_Controller\obj\Debug\LED_Strip_Controller.Properties.Resources.resources
+D:\Documents\Visual Studio 2015\Projects\LED_Strip_Controller\LED_Strip_Controller\obj\Debug\LED_Strip_Controller.csproj.GenerateResource.Cache
+D:\Documents\Visual Studio 2015\Projects\LED_Strip_Controller\LED_Strip_Controller\obj\Debug\Spectrum.baml
+D:\Documents\Visual Studio 2015\Projects\LED_Strip_Controller\LED_Strip_Controller\obj\Debug\Spectrum.g.cs
+D:\Documents\Visual Studio 2015\Projects\LED_Strip_Controller\LED_Strip_Controller\obj\Debug\LED_Strip_Controller_MarkupCompile.cache
+D:\Documents\Visual Studio 2015\Projects\LED_Strip_Controller\LED_Strip_Controller\obj\Debug\LED_Strip_Controller.g.resources

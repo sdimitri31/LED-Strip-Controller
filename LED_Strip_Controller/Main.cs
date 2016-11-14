@@ -8,11 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NAudio.CoreAudioApi;
 using System.IO;
 using System.Drawing.Imaging;
 using System.Diagnostics;
 using Microsoft.Win32;
+using System.Runtime.InteropServices;
 
 namespace LED_Strip_Controller
 {
@@ -21,11 +21,14 @@ namespace LED_Strip_Controller
     {
         private readonly byte[] _messagePreamble = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09 };
         private const string appName = "LED Strip Controller";
-        public const int numLed = 38;
-        byte[] donnees = new byte[numLed * 3];
-        byte[] donneesWithPreamble = new byte[(numLed * 3) + 10];
+
+        public int numLed;
+        byte[] donnees;
+        byte[] donneesWithPreamble;
+
         Music musique;
         Ambilight ambilight;
+        public Analyzer analyser;
 
         string adrilightPath = "";
 
@@ -36,11 +39,19 @@ namespace LED_Strip_Controller
         public MainForm()
         {
             InitializeComponent();
+            detecOtherInstance();
+
             contextMenuNotifyIcon.MenuItems.Add("Exit", (s, e) => Application.Exit());
             notifyIcon.ContextMenu = contextMenuNotifyIcon;
 
             checkbMinimize.Checked = Properties.Settings.Default.StartMinimized;
             checkbAutoStart.Checked = Properties.Settings.Default.AutoStart;
+
+            nbLED.Value = Properties.Settings.Default.nbLED;
+
+            numLed = (int)nbLED.Value;
+            donnees = new byte[numLed * 3];
+            donneesWithPreamble = new byte[(numLed * 3) + 10];
 
             for (int i = 0; i < donnees.Length; i++)
                 donnees[i] = 0;
@@ -54,6 +65,7 @@ namespace LED_Strip_Controller
 
             //Adrilight
             adrilightPath = Properties.Settings.Default.AdrilightPath;
+            tbAdrilightPath.Text = adrilightPath;
 
             //Initialisation de la LED strip
             //serialPort.Open();
@@ -71,15 +83,20 @@ namespace LED_Strip_Controller
             else
                 rbMusiqueGauche.Checked = true;
 
-            //Périphérique Son
-            MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
-            var devices = enumerator.EnumerateAudioEndPoints(DataFlow.All, DeviceState.Active);
-            cbPerifSon.Items.AddRange(devices.ToArray());
+            ////Périphérique Son
+            //MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
+            //var devices = enumerator.EnumerateAudioEndPoints(DataFlow.All, DeviceState.Active);
+            //cbPerifSon.Items.AddRange(devices.ToArray());
+            //int perif = Properties.Settings.Default.LastPerifSon;
+            //cbPerifSon.SelectedIndex = perif;
+
+            //Analyser
+            analyser = new Analyzer(cbPerifSon, spectrum1); 
             int perif = Properties.Settings.Default.LastPerifSon;
             cbPerifSon.SelectedIndex = perif;
 
             //Pattern Music
-            string[] patterns = { "Pattern 1 (Exp)", "Pattern 2", "Mirroir" };
+            string[] patterns = { "Pattern 1 (Exp)", "Pattern 2", "Mirroir", "Frequency", "Frequency Mirror" };
             cbPatternMusic.Items.AddRange(patterns);
             cbPatternMusic.SelectedIndex = musique.getPattern();
 
@@ -99,6 +116,23 @@ namespace LED_Strip_Controller
             if (Properties.Settings.Default.StartMinimized)
                 this.WindowState = FormWindowState.Minimized;
         }
+
+        private void detecOtherInstance()
+        {
+            // get the name of our process
+                string proc=Process.GetCurrentProcess().ProcessName;
+                // get the list of all processes by that name
+                Process[] processes=Process.GetProcessesByName(proc);
+                // if there is more than one process...
+                if (processes.Length > 1)
+                {
+
+                // exit our process
+                Process.GetCurrentProcess().Kill();
+                return;
+                }
+        }
+        
 
         //##############################################################################
         //                                 MainForm
@@ -135,33 +169,36 @@ namespace LED_Strip_Controller
         private void rbMode_CheckedChanged(object sender, EventArgs e)
         {
             RadioButton radioButton = sender as RadioButton;
+
+            //Par défaut on désactive les timers
             string lastMode = "off";
+            timerAmbilightGlobal.Enabled = false;
+            timerMusic.Enabled = false;
+            timerCouleur.Enabled = false;
+            analyser.Enable = false;
+            cbPerifSon.Enabled = true;
 
             if (rbModeOff.Checked)
             {
-                //Mode OFF on désactive les timers
-                timerAmbilightGlobal.Enabled = false;
-                timerMusic.Enabled = false;
-                timerCouleur.Enabled = false;
+                //Mode OFF
                 lastMode = "off";
+                stopAdrilight();
             }
             else if (rbModeMusique.Checked)
             {
-                stopAdrilight();
-                //Mode Musique on active juste le timer Musique
-                timerAmbilightGlobal.Enabled = false;
+                //Mode Musique
+                analyser.Enable = true;
                 timerMusic.Enabled = true;
-                timerCouleur.Enabled = false;
+                cbPerifSon.Enabled = false;
                 lastMode = "musique";
+                stopAdrilight();
             }
             else if (rbModeCouleur.Checked)
             {
-                stopAdrilight();
-                //Mode Couleur on active juste le timer Couleur
-                timerAmbilightGlobal.Enabled = false;
-                timerMusic.Enabled = false;
+                //Mode Couleur
                 timerCouleur.Enabled = true;
                 lastMode = "couleur";
+                stopAdrilight();
 
                 this.bCouleur.BackColor = cdCouleur.Color;
                 for (int i = 0; i < numLed; i++)
@@ -175,21 +212,14 @@ namespace LED_Strip_Controller
             }
             else if (rbModeGlobalAmbilight.Checked)
             {
-                stopAdrilight();
-                //Mode Global Ambilight on active juste le timer Ambilight Global
+                //Mode Global Ambilight 
                 timerAmbilightGlobal.Enabled = true;
-                timerMusic.Enabled = false;
-                timerCouleur.Enabled = false;
                 lastMode = "ambilight";
+                stopAdrilight();
             }
             else if (rbModeAdrilight.Checked)
             {
-                //Mode Adrilight on désative les timer
-                timerAmbilightGlobal.Enabled = false;
-                timerMusic.Enabled = false;
-                timerCouleur.Enabled = false;
-
-                //Et on lance Adrilight
+                //Mode Adrilight
                 startAdrilight();
                 lastMode = "adrilight";
             }
@@ -211,13 +241,14 @@ namespace LED_Strip_Controller
         //##############################################################################
         //                                 Musique
         //##############################################################################
-
+        
         private void timerMusic_Tick(object sender, EventArgs e)
         {
             if (cbPerifSon.SelectedItem != null)
             {
-                int value = musique.getVolumeValue();
-                pbMusic.Value = value;
+                //int value = musique.getVolumeValue();
+                int value = analyser._getLevel();
+                pbMusic.Value = (value > 0 && value <= 100) ? value : 0;
                 lValeurSon.Text = value.ToString();
 
                 //Ajout des données après le Preamble
@@ -236,8 +267,6 @@ namespace LED_Strip_Controller
             Properties.Settings.Default.Save();
 
         }
-
-        public MMDevice getCbPerifSonSelectedValue() { return (MMDevice)cbPerifSon.SelectedItem; }
         
         private void nbOffset_ValueChanged(object sender, EventArgs e)
         {
@@ -337,6 +366,7 @@ namespace LED_Strip_Controller
             if (result == DialogResult.OK)
             {
                 adrilightPath = openFileDialog.FileName;
+                tbAdrilightPath.Text = adrilightPath;
 
                 Properties.Settings.Default.AdrilightPath = adrilightPath;
                 Properties.Settings.Default.Save();
@@ -359,9 +389,8 @@ namespace LED_Strip_Controller
                     //MessageBox.Show(proc.ProcessName);
                 }
             }
-            catch (Exception ex)
+            catch 
             {
-                //MessageBox.Show(ex.Message);
             }
         }
 
@@ -381,36 +410,52 @@ namespace LED_Strip_Controller
         //                                  Tools
         //##############################################################################
 
-        public static void RotateLeft<T>(T[] array, int places)
+        public  void RotateLeft<T>(T[] array, int places)
         {
-            T[] temp = new T[places];
-            Array.Copy(array, 0, temp, 0, places);
-            Array.Copy(array, places, array, 0, array.Length - places);
-            Array.Copy(temp, 0, array, array.Length - places, places);
+            try {
+                T[] temp = new T[places];
+                Array.Copy(array, 0, temp, 0, places);
+                Array.Copy(array, places, array, 0, array.Length - places);
+                Array.Copy(temp, 0, array, array.Length - places, places);
+            }
+            catch
+            {
+                rbModeOff.Checked = true;
+                MessageBox.Show("You need to set the correct values for the Offset and the LED Number");
+            }
         }
 
-        public static void RotateRight<T>(T[] array, int count)
+        public  void RotateRight<T>(T[] array, int count)
         {
-            if (count < 0)
+            try
+            {
+                if (count < 0)
                 throw new ArgumentOutOfRangeException("count");
-            if (count == 0)
-                return;
+                if (count == 0)
+                    return;
 
-            // If (count == array.Length) there is nothing to do.
-            // So we need the remainder (count % array.Length):
-            count %= array.Length;
+                // If (count == array.Length) there is nothing to do.
+                // So we need the remainder (count % array.Length):
+                count %= array.Length;
 
-            // Create a temp array to store the tail of the source array
-            T[] tmp = new T[count];
+                // Create a temp array to store the tail of the source array
+                T[] tmp = new T[count];
 
-            // Copy tail of the source array to the temp array
-            Array.Copy(array, array.Length - count, tmp, 0, count);
+                // Copy tail of the source array to the temp array
+                Array.Copy(array, array.Length - count, tmp, 0, count);
 
-            // Shift elements right in the source array
-            Array.Copy(array, 0, array, count, array.Length - count);
+                // Shift elements right in the source array
+                Array.Copy(array, 0, array, count, array.Length - count);
 
-            // Copy saved tail to the head of the source array
-            Array.Copy(tmp, array, count);
+                // Copy saved tail to the head of the source array
+                Array.Copy(tmp, array, count);
+
+            }
+            catch
+            {
+                rbModeOff.Checked = true;
+                MessageBox.Show("You need to set the correct values for the Offset and the LED Number");
+            }
         }
 
         private void MainForm_Resize(object sender, EventArgs e)
@@ -457,5 +502,63 @@ namespace LED_Strip_Controller
             if (Properties.Settings.Default.StartMinimized)
                 this.Hide();
         }
+
+        private void nbLED_ValueChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void bValNumLED_Click(object sender, EventArgs e)
+        {
+            numLed = (int)nbLED.Value;
+
+            Properties.Settings.Default.nbLED = (int)nbLED.Value;
+            Properties.Settings.Default.Save();
+
+            DialogResult result =  MessageBox.Show("You need to restart to apply changes. Restart Now ?", "Information", MessageBoxButtons.YesNoCancel);
+            if (result == DialogResult.Yes)
+            {
+                numLed = (int)nbLED.Value;
+
+                Properties.Settings.Default.nbLED = (int)nbLED.Value;
+                Properties.Settings.Default.Save();
+                Application.Restart();
+            }
+            else if (result == DialogResult.Cancel)
+            {
+                nbLED.Value = Properties.Settings.Default.nbLED;
+                numLed = (int)nbLED.Value;
+            }
+            else
+            {
+                numLed = (int)nbLED.Value;
+
+                Properties.Settings.Default.nbLED = (int)nbLED.Value;
+                Properties.Settings.Default.Save();
+            }
+
+        }
+    }
+
+    public static class WindowHelper
+    {
+        public static void BringProcessToFront(Process process)
+        {
+            IntPtr handle = process.MainWindowHandle;
+            if (IsIconic(handle))
+            {
+                ShowWindow(handle, SW_RESTORE);
+            }
+
+            SetForegroundWindow(handle);
+        }
+
+        const int SW_RESTORE = 9;
+
+        [System.Runtime.InteropServices.DllImport("User32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr handle);
+        [System.Runtime.InteropServices.DllImport("User32.dll")]
+        private static extern bool ShowWindow(IntPtr handle, int nCmdShow);
+        [System.Runtime.InteropServices.DllImport("User32.dll")]
+        private static extern bool IsIconic(IntPtr handle);
     }
 }

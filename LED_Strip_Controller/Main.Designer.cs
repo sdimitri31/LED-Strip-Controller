@@ -32,16 +32,17 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.timerMusic = new System.Windows.Forms.Timer(this.components);
             this.serialPort = new System.IO.Ports.SerialPort(this.components);
-            this.gbPort = new System.Windows.Forms.GroupBox();
             this.cbSerialPort = new System.Windows.Forms.ComboBox();
             this.gbMusic = new System.Windows.Forms.GroupBox();
+            this.lRotation = new System.Windows.Forms.Label();
+            this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
+            this.spectrum1 = new LED_Strip_Controller.Spectrum();
             this.cbPatternMusic = new System.Windows.Forms.ComboBox();
             this.rbMusiqueDroite = new System.Windows.Forms.RadioButton();
             this.rbMusiqueGauche = new System.Windows.Forms.RadioButton();
             this.lOffset = new System.Windows.Forms.Label();
             this.nbOffset = new System.Windows.Forms.NumericUpDown();
             this.lValeurSon = new System.Windows.Forms.Label();
-            this.lNiveauSon = new System.Windows.Forms.Label();
             this.pbMusic = new System.Windows.Forms.ProgressBar();
             this.cbPerifSon = new System.Windows.Forms.ComboBox();
             this.gbCouleur = new System.Windows.Forms.GroupBox();
@@ -55,20 +56,23 @@
             this.rbModeOff = new System.Windows.Forms.RadioButton();
             this.rbModeMusique = new System.Windows.Forms.RadioButton();
             this.timerCouleur = new System.Windows.Forms.Timer(this.components);
-            this.gbAdrilight = new System.Windows.Forms.GroupBox();
             this.bAdrilight = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.gbStart = new System.Windows.Forms.GroupBox();
+            this.nbLED = new System.Windows.Forms.NumericUpDown();
+            this.lLEDNumber = new System.Windows.Forms.Label();
+            this.tbAdrilightPath = new System.Windows.Forms.TextBox();
+            this.lAdrilightPath = new System.Windows.Forms.Label();
             this.checkbMinimize = new System.Windows.Forms.CheckBox();
             this.checkbAutoStart = new System.Windows.Forms.CheckBox();
-            this.gbPort.SuspendLayout();
+            this.bValNumLED = new System.Windows.Forms.Button();
             this.gbMusic.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nbOffset)).BeginInit();
             this.gbCouleur.SuspendLayout();
             this.gbMode.SuspendLayout();
-            this.gbAdrilight.SuspendLayout();
             this.gbStart.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nbLED)).BeginInit();
             this.SuspendLayout();
             // 
             // timerMusic
@@ -80,20 +84,10 @@
             // 
             this.serialPort.BaudRate = 1000000;
             // 
-            // gbPort
-            // 
-            this.gbPort.Controls.Add(this.cbSerialPort);
-            this.gbPort.Location = new System.Drawing.Point(12, 67);
-            this.gbPort.Name = "gbPort";
-            this.gbPort.Size = new System.Drawing.Size(200, 53);
-            this.gbPort.TabIndex = 0;
-            this.gbPort.TabStop = false;
-            this.gbPort.Text = "Port COM";
-            // 
             // cbSerialPort
             // 
             this.cbSerialPort.FormattingEnabled = true;
-            this.cbSerialPort.Location = new System.Drawing.Point(7, 20);
+            this.cbSerialPort.Location = new System.Drawing.Point(7, 16);
             this.cbSerialPort.Name = "cbSerialPort";
             this.cbSerialPort.Size = new System.Drawing.Size(187, 21);
             this.cbSerialPort.TabIndex = 0;
@@ -101,26 +95,45 @@
             // 
             // gbMusic
             // 
+            this.gbMusic.Controls.Add(this.lRotation);
+            this.gbMusic.Controls.Add(this.elementHost1);
             this.gbMusic.Controls.Add(this.cbPatternMusic);
             this.gbMusic.Controls.Add(this.rbMusiqueDroite);
             this.gbMusic.Controls.Add(this.rbMusiqueGauche);
             this.gbMusic.Controls.Add(this.lOffset);
             this.gbMusic.Controls.Add(this.nbOffset);
             this.gbMusic.Controls.Add(this.lValeurSon);
-            this.gbMusic.Controls.Add(this.lNiveauSon);
             this.gbMusic.Controls.Add(this.pbMusic);
             this.gbMusic.Controls.Add(this.cbPerifSon);
-            this.gbMusic.Location = new System.Drawing.Point(12, 127);
+            this.gbMusic.Location = new System.Drawing.Point(14, 67);
             this.gbMusic.Name = "gbMusic";
-            this.gbMusic.Size = new System.Drawing.Size(200, 177);
+            this.gbMusic.Size = new System.Drawing.Size(200, 230);
             this.gbMusic.TabIndex = 1;
             this.gbMusic.TabStop = false;
             this.gbMusic.Text = "Musique";
             // 
+            // lRotation
+            // 
+            this.lRotation.AutoSize = true;
+            this.lRotation.Location = new System.Drawing.Point(6, 203);
+            this.lRotation.Name = "lRotation";
+            this.lRotation.Size = new System.Drawing.Size(53, 13);
+            this.lRotation.TabIndex = 11;
+            this.lRotation.Text = "Rotation :";
+            // 
+            // elementHost1
+            // 
+            this.elementHost1.Location = new System.Drawing.Point(10, 97);
+            this.elementHost1.Name = "elementHost1";
+            this.elementHost1.Size = new System.Drawing.Size(184, 69);
+            this.elementHost1.TabIndex = 10;
+            this.elementHost1.Text = "elementHost1";
+            this.elementHost1.Child = this.spectrum1;
+            // 
             // cbPatternMusic
             // 
             this.cbPatternMusic.FormattingEnabled = true;
-            this.cbPatternMusic.Location = new System.Drawing.Point(7, 149);
+            this.cbPatternMusic.Location = new System.Drawing.Point(7, 174);
             this.cbPatternMusic.Name = "cbPatternMusic";
             this.cbPatternMusic.Size = new System.Drawing.Size(187, 21);
             this.cbPatternMusic.TabIndex = 9;
@@ -130,7 +143,7 @@
             // 
             this.rbMusiqueDroite.AutoSize = true;
             this.rbMusiqueDroite.Checked = true;
-            this.rbMusiqueDroite.Location = new System.Drawing.Point(101, 116);
+            this.rbMusiqueDroite.Location = new System.Drawing.Point(141, 201);
             this.rbMusiqueDroite.Name = "rbMusiqueDroite";
             this.rbMusiqueDroite.Size = new System.Drawing.Size(53, 17);
             this.rbMusiqueDroite.TabIndex = 8;
@@ -141,7 +154,7 @@
             // rbMusiqueGauche
             // 
             this.rbMusiqueGauche.AutoSize = true;
-            this.rbMusiqueGauche.Location = new System.Drawing.Point(10, 116);
+            this.rbMusiqueGauche.Location = new System.Drawing.Point(72, 201);
             this.rbMusiqueGauche.Name = "rbMusiqueGauche";
             this.rbMusiqueGauche.Size = new System.Drawing.Size(63, 17);
             this.rbMusiqueGauche.TabIndex = 7;
@@ -160,34 +173,27 @@
             // 
             // nbOffset
             // 
-            this.nbOffset.Location = new System.Drawing.Point(63, 17);
+            this.nbOffset.Location = new System.Drawing.Point(110, 17);
             this.nbOffset.Name = "nbOffset";
-            this.nbOffset.Size = new System.Drawing.Size(59, 20);
+            this.nbOffset.Size = new System.Drawing.Size(84, 20);
             this.nbOffset.TabIndex = 5;
             this.nbOffset.ValueChanged += new System.EventHandler(this.nbOffset_ValueChanged);
             // 
             // lValeurSon
             // 
             this.lValeurSon.AutoSize = true;
-            this.lValeurSon.Location = new System.Drawing.Point(60, 90);
+            this.lValeurSon.BackColor = System.Drawing.Color.Transparent;
+            this.lValeurSon.Location = new System.Drawing.Point(163, 74);
             this.lValeurSon.Name = "lValeurSon";
-            this.lValeurSon.Size = new System.Drawing.Size(0, 13);
+            this.lValeurSon.Size = new System.Drawing.Size(13, 13);
             this.lValeurSon.TabIndex = 3;
-            // 
-            // lNiveauSon
-            // 
-            this.lNiveauSon.AutoSize = true;
-            this.lNiveauSon.Location = new System.Drawing.Point(7, 90);
-            this.lNiveauSon.Name = "lNiveauSon";
-            this.lNiveauSon.Size = new System.Drawing.Size(47, 13);
-            this.lNiveauSon.TabIndex = 2;
-            this.lNiveauSon.Text = "Niveau :";
+            this.lValeurSon.Text = "0";
             // 
             // pbMusic
             // 
-            this.pbMusic.Location = new System.Drawing.Point(7, 71);
+            this.pbMusic.Location = new System.Drawing.Point(12, 71);
             this.pbMusic.Name = "pbMusic";
-            this.pbMusic.Size = new System.Drawing.Size(187, 12);
+            this.pbMusic.Size = new System.Drawing.Size(175, 20);
             this.pbMusic.TabIndex = 1;
             // 
             // cbPerifSon
@@ -202,7 +208,7 @@
             // gbCouleur
             // 
             this.gbCouleur.Controls.Add(this.bCouleur);
-            this.gbCouleur.Location = new System.Drawing.Point(218, 67);
+            this.gbCouleur.Location = new System.Drawing.Point(14, 303);
             this.gbCouleur.Name = "gbCouleur";
             this.gbCouleur.Size = new System.Drawing.Size(200, 53);
             this.gbCouleur.TabIndex = 2;
@@ -233,7 +239,7 @@
             this.gbMode.Controls.Add(this.rbModeMusique);
             this.gbMode.Location = new System.Drawing.Point(12, 13);
             this.gbMode.Name = "gbMode";
-            this.gbMode.Size = new System.Drawing.Size(399, 48);
+            this.gbMode.Size = new System.Drawing.Size(408, 48);
             this.gbMode.TabIndex = 5;
             this.gbMode.TabStop = false;
             this.gbMode.Text = "Mode";
@@ -241,7 +247,7 @@
             // rbModeAdrilight
             // 
             this.rbModeAdrilight.AutoSize = true;
-            this.rbModeAdrilight.Location = new System.Drawing.Point(312, 19);
+            this.rbModeAdrilight.Location = new System.Drawing.Point(337, 19);
             this.rbModeAdrilight.Name = "rbModeAdrilight";
             this.rbModeAdrilight.Size = new System.Drawing.Size(62, 17);
             this.rbModeAdrilight.TabIndex = 4;
@@ -251,7 +257,7 @@
             // rbModeGlobalAmbilight
             // 
             this.rbModeGlobalAmbilight.AutoSize = true;
-            this.rbModeGlobalAmbilight.Location = new System.Drawing.Point(206, 19);
+            this.rbModeGlobalAmbilight.Location = new System.Drawing.Point(218, 19);
             this.rbModeGlobalAmbilight.Name = "rbModeGlobalAmbilight";
             this.rbModeGlobalAmbilight.Size = new System.Drawing.Size(100, 17);
             this.rbModeGlobalAmbilight.TabIndex = 3;
@@ -261,7 +267,7 @@
             // rbModeCouleur
             // 
             this.rbModeCouleur.AutoSize = true;
-            this.rbModeCouleur.Location = new System.Drawing.Point(139, 19);
+            this.rbModeCouleur.Location = new System.Drawing.Point(143, 19);
             this.rbModeCouleur.Name = "rbModeCouleur";
             this.rbModeCouleur.Size = new System.Drawing.Size(61, 17);
             this.rbModeCouleur.TabIndex = 2;
@@ -295,23 +301,13 @@
             this.timerCouleur.Interval = 1000;
             this.timerCouleur.Tick += new System.EventHandler(this.timerCouleur_Tick);
             // 
-            // gbAdrilight
-            // 
-            this.gbAdrilight.Controls.Add(this.bAdrilight);
-            this.gbAdrilight.Location = new System.Drawing.Point(219, 127);
-            this.gbAdrilight.Name = "gbAdrilight";
-            this.gbAdrilight.Size = new System.Drawing.Size(200, 53);
-            this.gbAdrilight.TabIndex = 6;
-            this.gbAdrilight.TabStop = false;
-            this.gbAdrilight.Text = "Adrilight";
-            // 
             // bAdrilight
             // 
-            this.bAdrilight.Location = new System.Drawing.Point(10, 20);
+            this.bAdrilight.Location = new System.Drawing.Point(154, 67);
             this.bAdrilight.Name = "bAdrilight";
-            this.bAdrilight.Size = new System.Drawing.Size(184, 21);
+            this.bAdrilight.Size = new System.Drawing.Size(40, 21);
             this.bAdrilight.TabIndex = 0;
-            this.bAdrilight.Text = "Adrilight.exe";
+            this.bAdrilight.Text = "...";
             this.bAdrilight.UseVisualStyleBackColor = true;
             this.bAdrilight.Click += new System.EventHandler(this.bAdrilight_Click);
             // 
@@ -323,19 +319,69 @@
             // 
             // gbStart
             // 
+            this.gbStart.Controls.Add(this.bValNumLED);
+            this.gbStart.Controls.Add(this.nbLED);
+            this.gbStart.Controls.Add(this.lLEDNumber);
+            this.gbStart.Controls.Add(this.tbAdrilightPath);
+            this.gbStart.Controls.Add(this.bAdrilight);
+            this.gbStart.Controls.Add(this.lAdrilightPath);
+            this.gbStart.Controls.Add(this.cbSerialPort);
             this.gbStart.Controls.Add(this.checkbMinimize);
             this.gbStart.Controls.Add(this.checkbAutoStart);
-            this.gbStart.Location = new System.Drawing.Point(220, 182);
+            this.gbStart.Location = new System.Drawing.Point(220, 67);
             this.gbStart.Name = "gbStart";
-            this.gbStart.Size = new System.Drawing.Size(200, 53);
+            this.gbStart.Size = new System.Drawing.Size(200, 119);
             this.gbStart.TabIndex = 7;
             this.gbStart.TabStop = false;
             this.gbStart.Text = "Paramètres";
             // 
+            // nbLED
+            // 
+            this.nbLED.Location = new System.Drawing.Point(85, 42);
+            this.nbLED.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nbLED.Name = "nbLED";
+            this.nbLED.Size = new System.Drawing.Size(63, 20);
+            this.nbLED.TabIndex = 5;
+            this.nbLED.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nbLED.ValueChanged += new System.EventHandler(this.nbLED_ValueChanged);
+            // 
+            // lLEDNumber
+            // 
+            this.lLEDNumber.AutoSize = true;
+            this.lLEDNumber.Location = new System.Drawing.Point(7, 44);
+            this.lLEDNumber.Name = "lLEDNumber";
+            this.lLEDNumber.Size = new System.Drawing.Size(37, 13);
+            this.lLEDNumber.TabIndex = 4;
+            this.lLEDNumber.Text = "LED : ";
+            // 
+            // tbAdrilightPath
+            // 
+            this.tbAdrilightPath.Location = new System.Drawing.Point(85, 68);
+            this.tbAdrilightPath.Name = "tbAdrilightPath";
+            this.tbAdrilightPath.Size = new System.Drawing.Size(63, 20);
+            this.tbAdrilightPath.TabIndex = 3;
+            // 
+            // lAdrilightPath
+            // 
+            this.lAdrilightPath.AutoSize = true;
+            this.lAdrilightPath.Location = new System.Drawing.Point(7, 71);
+            this.lAdrilightPath.Name = "lAdrilightPath";
+            this.lAdrilightPath.Size = new System.Drawing.Size(72, 13);
+            this.lAdrilightPath.TabIndex = 2;
+            this.lAdrilightPath.Text = "AdrilightPath :";
+            // 
             // checkbMinimize
             // 
             this.checkbMinimize.AutoSize = true;
-            this.checkbMinimize.Location = new System.Drawing.Point(95, 19);
+            this.checkbMinimize.Location = new System.Drawing.Point(95, 96);
             this.checkbMinimize.Name = "checkbMinimize";
             this.checkbMinimize.Size = new System.Drawing.Size(96, 17);
             this.checkbMinimize.TabIndex = 1;
@@ -346,7 +392,7 @@
             // checkbAutoStart
             // 
             this.checkbAutoStart.AutoSize = true;
-            this.checkbAutoStart.Location = new System.Drawing.Point(9, 19);
+            this.checkbAutoStart.Location = new System.Drawing.Point(9, 96);
             this.checkbAutoStart.Name = "checkbAutoStart";
             this.checkbAutoStart.Size = new System.Drawing.Size(70, 17);
             this.checkbAutoStart.TabIndex = 0;
@@ -354,33 +400,40 @@
             this.checkbAutoStart.UseVisualStyleBackColor = true;
             this.checkbAutoStart.CheckedChanged += new System.EventHandler(this.checkbAutoStart_CheckedChanged);
             // 
+            // bValNumLED
+            // 
+            this.bValNumLED.Location = new System.Drawing.Point(154, 42);
+            this.bValNumLED.Name = "bValNumLED";
+            this.bValNumLED.Size = new System.Drawing.Size(40, 23);
+            this.bValNumLED.TabIndex = 6;
+            this.bValNumLED.Text = "OK";
+            this.bValNumLED.UseVisualStyleBackColor = true;
+            this.bValNumLED.Click += new System.EventHandler(this.bValNumLED_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(423, 316);
+            this.ClientSize = new System.Drawing.Size(450, 401);
             this.Controls.Add(this.gbStart);
-            this.Controls.Add(this.gbAdrilight);
             this.Controls.Add(this.gbMode);
             this.Controls.Add(this.gbCouleur);
             this.Controls.Add(this.gbMusic);
-            this.Controls.Add(this.gbPort);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(419, 355);
             this.Name = "MainForm";
             this.Text = "LED Strip Controller";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Resize += new System.EventHandler(this.MainForm_Resize);
-            this.gbPort.ResumeLayout(false);
             this.gbMusic.ResumeLayout(false);
             this.gbMusic.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nbOffset)).EndInit();
             this.gbCouleur.ResumeLayout(false);
             this.gbMode.ResumeLayout(false);
             this.gbMode.PerformLayout();
-            this.gbAdrilight.ResumeLayout(false);
             this.gbStart.ResumeLayout(false);
             this.gbStart.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nbLED)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -389,11 +442,9 @@
 
         private System.Windows.Forms.Timer timerMusic;
         private System.IO.Ports.SerialPort serialPort;
-        private System.Windows.Forms.GroupBox gbPort;
         private System.Windows.Forms.ComboBox cbSerialPort;
         private System.Windows.Forms.GroupBox gbMusic;
         private System.Windows.Forms.Label lValeurSon;
-        private System.Windows.Forms.Label lNiveauSon;
         private System.Windows.Forms.ProgressBar pbMusic;
         private System.Windows.Forms.ComboBox cbPerifSon;
         private System.Windows.Forms.GroupBox gbCouleur;
@@ -412,13 +463,20 @@
         private System.Windows.Forms.RadioButton rbModeOff;
         private System.Windows.Forms.RadioButton rbModeMusique;
         private System.Windows.Forms.Timer timerCouleur;
-        private System.Windows.Forms.GroupBox gbAdrilight;
         private System.Windows.Forms.Button bAdrilight;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private System.Windows.Forms.GroupBox gbStart;
         private System.Windows.Forms.CheckBox checkbMinimize;
         private System.Windows.Forms.CheckBox checkbAutoStart;
+        private System.Windows.Forms.Integration.ElementHost elementHost1;
+        private Spectrum spectrum1;
+        private System.Windows.Forms.Label lRotation;
+        private System.Windows.Forms.TextBox tbAdrilightPath;
+        private System.Windows.Forms.Label lAdrilightPath;
+        private System.Windows.Forms.NumericUpDown nbLED;
+        private System.Windows.Forms.Label lLEDNumber;
+        private System.Windows.Forms.Button bValNumLED;
     }
 }
 
